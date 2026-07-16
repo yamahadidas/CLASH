@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Terminal Fixer — CLASH</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0b0b0c;
+    --panel:#161519;
+    --panel-2:#1d1b21;
+    --line:#37333c;
+    --line-soft:#26232a;
+    --text:#ece7dc;
+    --text-dim:#948e97;
+    --text-faint:#615c66;
+    --red:#b7362f;
+    --red-soft:#5a2320;
+    --amber:#c98a2c;
+    --teal:#3f8079;
+    --teal-soft:#1c3634;
+    --good:#5a9c6a;
+    --bad:#c1443c;
+    --font-display:'Oswald',sans-serif;
+    --font-body:'Work Sans',sans-serif;
+    --font-mono:'IBM Plex Mono',monospace;
+  }
+
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(1200px 600px at 15% -10%, rgba(183,54,47,0.06), transparent 60%),
+      radial-gradient(900px 500px at 100% 0%, rgba(63,128,121,0.06), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    font-family:var(--font-body);
+    font-size:15px;
+    line-height:1.5;
+    min-height:100vh;
+  }
+
+  .app{max-width:920px;margin:0 auto;padding:28px 18px 60px;}
+
+  /* ---------- HEADER ---------- */
+  .header{
+    display:flex;justify-content:space-between;align-items:flex-start;gap:16px;
+    border-bottom:2px solid var(--line);
+    padding-bottom:18px;margin-bottom:22px;
+    flex-wrap:wrap;
+  }
+  .header-eyebrow{
+    font-family:var(--font-mono);font-size:11px;letter-spacing:.14em;
+    color:var(--red);text-transform:uppercase;margin-bottom:6px;
+  }
+  .header h1{
+    font-family:var(--font-display);font-weight:600;font-size:30px;
+    margin:0;letter-spacing:.01em;color:var(--text);
+  }
+  .header p{
+    margin:6px 0 0;color:var(--text-dim);font-size:13px;max-width:46ch;
+  }
+  .stamp{
+    font-family:var(--font-mono);font-size:10.5px;letter-spacing:.08em;
+    color:var(--red);border:1.5px dashed var(--red-soft);
+    padding:8px 12px;transform:rotate(-4deg);
+    text-transform:uppercase;text-align:center;line-height:1.5;
+    white-space:nowrap;opacity:.85;
+  }
+
+  /* ---------- TABS ---------- */
+  .tabs{display:flex;gap:6px;margin-bottom:18px;flex-wrap:wrap;}
+  .tab-btn{
+    font-family:var(--font-mono);font-size:12px;letter-spacing:.04em;
+    background:var(--panel);color:var(--text-dim);
+    border:1px solid var(--line);border-bottom:none;
+    padding:10px 14px;cursor:pointer;
+    border-radius:4px 4px 0 0;
+    transition:color .15s, background .15s;
+  }
+  .tab-btn b{color:var(--red);font-weight:600;margin-right:6px;}
+  .tab-btn:hover{color:var(--text);}
+  .tab-btn.active{
+    background:var(--panel-2);color:var(--text);
+    box-shadow:inset 0 2px 0 var(--red);
+  }
+  .tab-btn.active b{color:var(--red);}
+
+  /* ---------- PANELS ---------- */
+  .panel{
+    background:var(--panel-2);
+    border:1px solid var(--line);
+    border-radius:2px;
+    padding:22px;
+    display:none;
+  }
+  .panel.active{display:block;}
+  .panel-head{
+    font-family:var(--font-display);font-size:19px;font-weight:600;
+    color:var(--text);margin:0 0 4px;letter-spacing:.01em;
+  }
+  .panel-sub{
+    color:var(--text-dim);font-size:12.5px;margin:0 0 20px;
+    border-bottom:1px solid var(--line-soft);padding-bottom:16px;
+  }
+
+  h3.section-label{
+    font-family:var(--font-mono);font-size:11px;letter-spacing:.1em;
+    color:var(--amber);text-transform:uppercase;
+    margin:24px 0 10px;
+  }
+  h3.section-label:first-of-type{margin-top:0;}
+
+  /* ---------- FORM ELEMENTS ---------- */
+  label{display:block;font-size:12px;color:var(--text-dim);margin-bottom:4px;}
+  input[type=number], input[type=text], select{
+    width:100%;background:var(--panel);border:1px solid var(--line);
+    color:var(--text);font-family:var(--font-mono);font-size:14px;
+    padding:8px 9px;border-radius:3px;
+  }
+  input[type=number]:focus, input[type=text]:focus, select:focus{
+    outline:2px solid var(--teal);outline-offset:1px;border-color:var(--teal);
+  }
+  input[readonly]{color:var(--teal);background:var(--teal-soft);border-color:var(--teal);}
+  input[type=range]{width:100%;accent-color:var(--red);}
+
+  .stat-grid{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:14px;
+  }
+  .stat-pair{
+    background:var(--panel);border:1px solid var(--line-soft);
+    border-radius:3px;padding:12px;
+  }
+  .stat-pair-title{
+    font-family:var(--font-display);font-size:13px;font-weight:600;
+    color:var(--text);margin-bottom:8px;display:flex;justify-content:space-between;
+  }
+  .stat-pair-title span{font-family:var(--font-mono);color:var(--amber);font-size:13px;}
+  .stat-pair-inputs{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .stat-pair-inputs label{font-size:10.5px;}
+
+  .out-row{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:6px;}
+  .out-card{
+    background:var(--panel);border:1px solid var(--line-soft);
+    border-radius:3px;padding:14px;text-align:center;
+  }
+  .out-card .out-label{
+    font-family:var(--font-mono);font-size:10.5px;color:var(--text-dim);
+    text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px;
+  }
+  .out-card .out-value{
+    font-family:var(--font-mono);font-size:26px;font-weight:600;
+  }
+  .out-card.hp .out-value{color:var(--red);}
+  .out-card.stagger .out-value{color:var(--amber);}
+  .out-card.sanity .out-value{color:var(--teal);}
+
+  .sp-row{display:flex;align-items:center;gap:12px;margin-top:14px;}
+  .sp-row .sp-val{font-family:var(--font-mono);width:44px;text-align:right;color:var(--amber);}
+
+  table.calma-table{width:100%;border-collapse:collapse;margin-top:10px;font-size:12.5px;}
+  table.calma-table th,table.calma-table td{
+    border:1px solid var(--line-soft);padding:6px 8px;text-align:center;
+    font-family:var(--font-mono);color:var(--text-dim);
+  }
+  table.calma-table th{color:var(--text-dim);font-weight:500;}
+  table.calma-table tr.active td{background:var(--teal-soft);color:var(--text);}
+
+  .save-row{
+    display:grid;grid-template-columns:1.2fr 1.4fr auto auto;gap:8px;
+    margin-top:8px;align-items:end;
+  }
+  .save-row label{margin-bottom:4px;}
+  button{
+    font-family:var(--font-mono);font-size:12.5px;letter-spacing:.03em;
+    background:var(--red);color:#fff;border:none;border-radius:3px;
+    padding:9px 14px;cursor:pointer;text-transform:uppercase;
+    transition:filter .15s;
+  }
+  button:hover{filter:brightness(1.12);}
+  button.secondary{background:var(--panel);border:1px solid var(--line);color:var(--text-dim);}
+  button.secondary:hover{color:var(--text);}
+  button.ghost{background:transparent;border:1px solid var(--line);color:var(--text-dim);}
+  .status-msg{font-family:var(--font-mono);font-size:11.5px;margin-top:8px;min-height:14px;}
+  .status-msg.ok{color:var(--good);}
+  .status-msg.err{color:var(--bad);}
+
+  /* ---------- STEPPER ---------- */
+  .stepper{display:flex;gap:6px;margin-bottom:16px;}
+  .stepper button{
+    flex:1;background:var(--panel);border:1px solid var(--line);color:var(--text-dim);
+    padding:10px;text-transform:none;font-size:13px;
+  }
+  .stepper button.active{background:var(--red-soft);border-color:var(--red);color:var(--text);}
+
+  /* ---------- ACTION ROWS ---------- */
+  .action-row{
+    background:var(--panel);border:1px solid var(--line-soft);border-radius:3px;
+    padding:12px;margin-bottom:10px;
+    display:grid;grid-template-columns:.9fr 1.4fr .7fr .8fr;gap:10px;align-items:end;
+  }
+  .action-row-head{
+    grid-column:1/-1;font-family:var(--font-mono);font-size:11px;color:var(--amber);
+    text-transform:uppercase;letter-spacing:.08em;margin-bottom:2px;
+  }
+  .skill-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+
+  .result-row{
+    display:flex;gap:10px;align-items:center;flex-wrap:wrap;
+    font-family:var(--font-mono);font-size:13px;
+    padding:9px 12px;border-left:3px solid var(--teal);
+    background:var(--panel);margin-bottom:6px;border-radius:0 3px 3px 0;
+    animation:stampIn .28s ease-out;
+  }
+  .result-tag{
+    font-family:var(--font-display);font-size:12px;text-transform:uppercase;
+    color:var(--text-dim);min-width:80px;
+  }
+  .result-total{color:var(--amber);font-weight:600;}
+  .result-grand{
+    font-family:var(--font-mono);font-size:15px;padding:12px 14px;margin-top:4px;
+    background:var(--panel);border:1px solid var(--line-soft);border-radius:3px;
+    animation:stampIn .32s ease-out;
+  }
+  .result-grand strong{color:var(--red);}
+  .result-grand.ok{border-color:var(--good);color:var(--good);font-weight:600;}
+  .result-grand.bad{border-color:var(--bad);color:var(--bad);font-weight:600;}
+
+  @keyframes stampIn{
+    0%{transform:scale(1.25) rotate(-2deg);opacity:0;}
+    60%{transform:scale(.97) rotate(.5deg);opacity:1;}
+    100%{transform:scale(1) rotate(0);}
+  }
+
+  .ee-block{
+    margin-top:22px;padding-top:16px;border-top:1px solid var(--line-soft);
+    display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end;
+  }
+
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+
+  .footnote{
+    margin-top:26px;color:var(--text-faint);font-size:11.5px;
+    font-family:var(--font-mono);line-height:1.6;
+    border-top:1px solid var(--line-soft);padding-top:14px;
+  }
+
+  @media (max-width:640px){
+    .stat-grid{grid-template-columns:1fr 1fr;}
+    .out-row{grid-template-columns:1fr;}
+    .action-row{grid-template-columns:1fr 1fr;}
+    .save-row{grid-template-columns:1fr 1fr;}
+    .two-col{grid-template-columns:1fr;}
+    .ee-block{grid-template-columns:1fr;}
+    .header{flex-direction:column;}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <div class="header">
+    <div>
+      <div class="header-eyebrow">Sistema CLASH · La Ciudad</div>
+      <h1>Terminal Personal</h1>
+      <p>Calculadora de apoyo para no perder el ritmo en mesa: ficha, ataques, resistencias y chequeos.</p>
+    </div>
+    <div class="stamp">Uso interno<br>Oficina de Fixers</div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="a"><b>A</b>Fixer</button>
+    <button class="tab-btn" data-tab="b"><b>B</b>Ataque</button>
+    <button class="tab-btn" data-tab="c"><b>C</b>Resistencias</button>
+    <button class="tab-btn" data-tab="d"><b>D</b>Chequeo</button>
+  </div>
+
+  <!-- ================= TAB A ================= -->
+  <div class="panel active" id="tab-a">
+    <div class="panel-head">Sección A — Datos del Fixer</div>
+    <div class="panel-sub">Ingresa las 8 skills. Los 4 atributos mayores se calculan solos (promedio de su par).</div>
+
+    <div class="stat-grid">
+      <div class="stat-pair">
+        <div class="stat-pair-title">Fortaleza <span id="out-fortaleza">1.0</span></div>
+        <div class="stat-pair-inputs">
+          <label>Físico<input type="number" id="f-fisico" value="1" min="1" max="9" step="1"></label>
+          <label>Resistencia<input type="number" id="f-resistencia" value="1" min="1" max="9" step="1"></label>
+        </div>
+      </div>
+      <div class="stat-pair">
+        <div class="stat-pair-title">Prudencia <span id="out-prudencia">1.0</span></div>
+        <div class="stat-pair-inputs">
+          <label>Comprensión<input type="number" id="f-comprension" value="1" min="1" max="9" step="1"></label>
+          <label>Calma<input type="number" id="f-calma" value="1" min="1" max="9" step="1"></label>
+        </div>
+      </div>
+      <div class="stat-pair">
+        <div class="stat-pair-title">Templanza <span id="out-templanza">1.0</span></div>
+        <div class="stat-pair-inputs">
+          <label>Intuición<input type="number" id="f-intuicion" value="1" min="1" max="9" step="1"></label>
+          <label>Convicción<input type="number" id="f-conviccion" value="1" min="1" max="9" step="1"></label>
+        </div>
+      </div>
+      <div class="stat-pair">
+        <div class="stat-pair-title">Justicia <span id="out-justicia">1.0</span></div>
+        <div class="stat-pair-inputs">
+          <label>Reflejos<input type="number" id="f-reflejos" value="1" min="1" max="9" step="1"></label>
+          <label>Enfoque<input type="number" id="f-enfoque" value="1" min="1" max="9" step="1"></label>
+        </div>
+      </div>
+    </div>
+
+    <h3 class="section-label">Sanidad (SP)</h3>
+    <div class="sp-row">
+      <input type="range" id="f-sp" min="-45" max="45" step="1" value="0">
+      <span class="sp-val" id="f-sp-value">0</span>
+    </div>
+
+    <div class="out-row" style="margin-top:16px;">
+      <div class="out-card hp"><div class="out-label">HP</div><div class="out-value" id="out-hp">45</div></div>
+      <div class="out-card stagger"><div class="out-label">Stagger</div><div class="out-value" id="out-stagger">34</div></div>
+      <div class="out-card sanity"><div class="out-label">Tirada de sanidad</div><div class="out-value" id="out-sanity-target">≥ 11</div></div>
+    </div>
+
+    <h3 class="section-label">Referencia de Calma (ganancia / pérdida de SP)</h3>
+    <table class="calma-table">
+      <thead><tr><th>Calma</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>EX</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Gana</td>
+          <td id="calma-row-1">+2</td><td id="calma-row-2">+3</td><td id="calma-row-3">+4</td>
+          <td id="calma-row-4">+5</td><td id="calma-row-5">+6</td><td id="calma-row-6">+7</td><td id="calma-row-ex">+9</td>
+        </tr>
+        <tr>
+          <td>Pierde</td>
+          <td>−6</td><td>−5</td><td>−4</td><td>−3</td><td>−2</td><td>−1</td><td>−1</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 class="section-label">Guardar / Cargar Fixer</h3>
+    <div class="save-row">
+      <div><label>Nombre del Fixer</label><input type="text" id="f-name" placeholder="ej. Roland"></div>
+      <div><label>Fixers guardados</label><select id="sel-load"><option value="">— sin fixers guardados —</option></select></div>
+      <button id="btn-save">Guardar</button>
+      <div style="display:flex;gap:6px;">
+        <button class="secondary" id="btn-load">Cargar</button>
+        <button class="ghost" id="btn-delete">Eliminar</button>
+      </div>
+    </div>
+    <div class="status-msg" id="save-status"></div>
+    <div class="footnote">Guardado localmente en tu cuenta, no es visible para otros jugadores. Cada uno guarda su propio Fixer desde su navegador.</div>
+  </div>
+
+  <!-- ================= TAB B ================= -->
+  <div class="panel" id="tab-b">
+    <div class="panel-head">Sección B — Construcción de ATAQUE</div>
+    <div class="panel-sub">Elige cuántas acciones tiene tu ATAQUE, define cada una y tira todo de una vez.</div>
+
+    <h3 class="section-label">N° de acciones</h3>
+    <div class="stepper" id="n-stepper">
+      <button data-n="1" class="active">1 acción</button>
+      <button data-n="2">2 acciones</button>
+      <button data-n="3">3 acciones</button>
+      <button data-n="4">4 acciones</button>
+    </div>
+
+    <h3 class="section-label">Acciones</h3>
+    <div id="actions-container"></div>
+
+    <button id="btn-roll-attack" style="margin-top:6px;">Tirar ATAQUE</button>
+    <div id="results-attack" style="margin-top:14px;"></div>
+
+    <div class="ee-block">
+      <div><label>Enfoque (para E.E. — 1d4 + Enfoque)</label><input type="number" id="enfoque-ee" value="1"></div>
+      <button class="secondary" id="btn-roll-ee">Tirar E.E.</button>
+    </div>
+    <div id="results-ee" style="margin-top:10px;font-family:var(--font-mono);font-size:13px;color:var(--text-dim);"></div>
+
+    <div class="footnote">
+      Escalón de arma: 0 = ideal, 1 = "asequible", 2 = "ineficiente" (o el valor que defina tu arma). Se suma al escalón de dado dictado por el N° de acciones, sobre la escala 1d20 → 1d12 → 1d8 → 1d6 → 1d4 → 1d2.<br>
+      Nota: el ejemplo de arma del documento original (Espada Inflamable, 3 acciones) da 1d8 / 1d6 / 1d2 para Corte/Perforación/Contusión. Siguiendo la escala de forma estrictamente aditiva, el último debería salir 1d4, no 1d2 — probable error de tipeo en el original. Esta calculadora usa la versión aditiva consistente; ajusta el escalón manualmente si tu mesa prefiere seguir el texto tal cual.
+    </div>
+  </div>
+
+  <!-- ================= TAB C ================= -->
+  <div class="panel" id="tab-c">
+    <div class="panel-head">Sección C — Resistencias y Daño Final</div>
+    <div class="panel-sub">Aplica el multiplicador de afinidad del objetivo sobre el daño ya calculado.</div>
+
+    <div class="two-col">
+      <div><label>Daño base (post-CLASH)</label><input type="number" id="c-damage" value="15"></div>
+      <div>
+        <label>Afinidad del objetivo</label>
+        <select id="c-affinity">
+          <option value="1">Normal (×1)</option>
+          <option value="1.5">Débil (×1.5)</option>
+          <option value="0.5">Resistente (×0.5)</option>
+          <option value="2">Fatal (×2)</option>
+          <option value="0.25">Inmune (×0.25)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="out-row" style="grid-template-columns:1fr;margin-top:16px;">
+      <div class="out-card hp"><div class="out-label">Daño final</div><div class="out-value" id="c-result">15</div></div>
+    </div>
+    <div style="text-align:center;font-family:var(--font-mono);color:var(--text-dim);font-size:12.5px;margin-top:8px;" id="c-formula">15 × 1 = 15</div>
+  </div>
+
+  <!-- ================= TAB D ================= -->
+  <div class="panel" id="tab-d">
+    <div class="panel-head">Sección D — Chequeo General</div>
+    <div class="panel-sub">Para cualquier check fuera de combate. Más skills involucradas = dado más chico.</div>
+
+    <h3 class="section-label">Dificultad</h3>
+    <select id="d-difficulty">
+      <option value="5">Trivial (≥5)</option>
+      <option value="10">Fácil (≥10)</option>
+      <option value="15" selected>Moderada (≥15)</option>
+      <option value="20">Difícil (≥20)</option>
+      <option value="25">Muy Difícil (≥25)</option>
+      <option value="30">Extrema (≥30)</option>
+      <option value="35">Caso Perdido (≥35+)</option>
+    </select>
+
+    <h3 class="section-label">Skills involucradas</h3>
+    <div class="stepper" id="d-stepper">
+      <button data-n="1" class="active">1 (1d20)</button>
+      <button data-n="2">2 (1d12)</button>
+      <button data-n="3">3 (1d8)</button>
+      <button data-n="4">4+ (1d6)</button>
+    </div>
+
+    <label>Modificador total (suma de skills relevantes)</label>
+    <input type="number" id="d-mod" value="0">
+
+    <button id="btn-roll-check" style="margin-top:12px;">Tirar Chequeo</button>
+    <div id="results-check" style="margin-top:14px;"></div>
+  </div>
+
+  <div class="footnote">
+    Terminal de apoyo para CLASH — Pulperian Edition. Los números finales siempre quedan a criterio del GM.
+  </div>
+
+</div>
+
+<script>
+(function(){
+  const $ = (sel)=>document.querySelector(sel);
+  const $$ = (sel)=>Array.from(document.querySelectorAll(sel));
+  const clamp = (v,min,max)=>Math.max(min,Math.min(max,v));
+  const numVal = (id)=>{ const el=document.getElementById(id); if(!el) return 0; const v=parseFloat(el.value); return isNaN(v)?0:v; };
+  const setText = (id,val)=>{ const el=document.getElementById(id); if(el) el.textContent=val; };
+  const setVal = (id,v)=>{ const el=document.getElementById(id); if(el && v!==undefined && v!==null) el.value=v; };
+  const fmt = (n)=> Number.isInteger(n) ? String(n) : n.toFixed(1);
+  const escapeHtml = (s)=> String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const rollDie = (sides)=> Math.floor(Math.random()*sides)+1;
+  const dieLadder = [20,12,8,6,4,2];
+  const dieForAction = (n, step)=> dieLadder[clamp((n-1)+step,0,5)];
+
+  // ---------------- TABS ----------------
+  $$('.tab-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      $$('.tab-btn').forEach(b=>b.classList.remove('active'));
+      $$('.panel').forEach(p=>p.classList.remove('active'));
+      btn.classList.add('active');
+      $('#tab-'+btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  // ---------------- TAB A: FICHA ----------------
+  const fichaIds = ['f-fisico','f-resistencia','f-comprension','f-calma','f-intuicion','f-conviccion','f-reflejos','f-enfoque'];
+
+  function avg(a,b){ return (a+b)/2; }
+
+  function recalcFicha(){
+    const fisico=numVal('f-fisico'), resistencia=numVal('f-resistencia');
+    const comprension=numVal('f-comprension'), calma=numVal('f-calma');
+    const intuicion=numVal('f-intuicion'), conviccion=numVal('f-conviccion');
+    const reflejos=numVal('f-reflejos'), enfoque=numVal('f-enfoque');
+
+    const fortaleza=avg(fisico,resistencia), prudencia=avg(comprension,calma);
+    const templanza=avg(intuicion,conviccion), justicia=avg(reflejos,enfoque);
+
+    setText('out-fortaleza', fmt(fortaleza));
+    setText('out-prudencia', fmt(prudencia));
+    setText('out-templanza', fmt(templanza));
+    setText('out-justicia', fmt(justicia));
+
+    const hp = Math.round(40 + 5*fortaleza*fortaleza);
+    const stagger = Math.round(30 + 4*resistencia*resistencia);
+    setText('out-hp', hp);
+    setText('out-stagger', stagger);
+
+    const sp = numVal('f-sp');
+    setText('f-sp-value', sp);
+    let target = Math.round(11 - sp/5);
+    target = clamp(target, 2, 20);
+    setText('out-sanity-target', '≥ '+target);
+
+    highlightCalma(calma);
+  }
+
+  function highlightCalma(calma){
+    const key = calma>=7 ? 'ex' : Math.round(clamp(calma,1,6));
+    for(let r=1;r<=6;r++){
+      const cell = document.getElementById('calma-row-'+r);
+      if(cell) cell.parentElement.classList.toggle('active', key===r);
+    }
+    const exCell = document.getElementById('calma-row-ex');
+    if(exCell) exCell.parentElement.classList.toggle('active', key==='ex');
+  }
+
+  fichaIds.concat(['f-sp']).forEach(id=>{
+    const el=document.getElementById(id);
+    if(el) el.addEventListener('input', recalcFicha);
+  });
+
+  function collectFichaData(){
+    const d={};
+    fichaIds.forEach(id=>{ d[id.replace('f-','')] = numVal(id); });
+    d.sp = numVal('f-sp');
+    return d;
+  }
+  function applyFichaData(d){
+    fichaIds.forEach(id=>{
+      const key=id.replace('f-','');
+      if(d[key]!==undefined) setVal(id, d[key]);
+    });
+    if(d.sp!==undefined) setVal('f-sp', d.sp);
+    recalcFicha();
+  }
+
+  function setStatus(msg, isErr){
+    const el=$('#save-status');
+    if(!el) return;
+    el.textContent = msg;
+    el.className = 'status-msg ' + (isErr ? 'err' : 'ok');
+    clearTimeout(window.__statusTimer);
+    window.__statusTimer = setTimeout(()=>{ el.textContent=''; }, 3500);
+  }
+
+  async function refreshFixerList(){
+    const sel = $('#sel-load');
+    try{
+      const res = await window.storage.list('fixer:', false);
+      const keys = (res && res.keys) || [];
+      if(keys.length===0){
+        sel.innerHTML = '<option value="">— sin fixers guardados —</option>';
+        return;
+      }
+      sel.innerHTML = '<option value="">— elige un Fixer —</option>' + keys.map(k=>{
+        const name = k.startsWith('fixer:') ? k.slice(6) : k;
+        return `<option value="${escapeHtml(k)}">${escapeHtml(name)}</option>`;
+      }).join('');
+    }catch(e){
+      sel.innerHTML = '<option value="">— sin fixers guardados —</option>';
+    }
+  }
+
+  async function saveFixer(){
+    const name = $('#f-name').value.trim();
+    if(!name){ setStatus('Escribe un nombre primero.', true); return; }
+    const data = collectFichaData();
+    try{
+      const res = await window.storage.set('fixer:'+name, JSON.stringify(data), false);
+      if(res){ setStatus('Guardado ✓'); await refreshFixerList(); }
+      else{ setStatus('No se pudo guardar.', true); }
+    }catch(e){ setStatus('Error al guardar.', true); }
+  }
+
+  async function loadFixer(){
+    const key = $('#sel-load').value;
+    if(!key){ setStatus('Elige un Fixer de la lista.', true); return; }
+    try{
+      const res = await window.storage.get(key, false);
+      if(res && res.value){
+        applyFichaData(JSON.parse(res.value));
+        $('#f-name').value = key.slice(6);
+        setStatus('Cargado ✓');
+      }
+    }catch(e){ setStatus('No se encontró ese Fixer.', true); }
+  }
+
+  async function deleteFixer(){
+    const key = $('#sel-load').value;
+    if(!key){ setStatus('Elige un Fixer para eliminar.', true); return; }
+    try{
+      await window.storage.delete(key, false);
+      setStatus('Eliminado.');
+      await refreshFixerList();
+    }catch(e){ setStatus('Error al eliminar.', true); }
+  }
+
+  $('#btn-save').addEventListener('click', saveFixer);
+  $('#btn-load').addEventListener('click', loadFixer);
+  $('#btn-delete').addEventListener('click', deleteFixer);
+
+  // ---------------- TAB B: ATAQUE ----------------
+  let currentN = 1;
+
+  function renderActions(n){
+    let html='';
+    for(let i=1;i<=n;i++){
+      html += `
+      <div class="action-row">
+        <div class="action-row-head">Acción ${i}</div>
+        <label>Tipo
+          <select id="act-type-${i}">
+            <option>Corte</option><option>Perforación</option><option>Contusión</option>
+            <option>Evadir</option><option>Defender</option><option>Contraataque</option>
+          </select>
+        </label>
+        <label>Skill
+          <div class="skill-row">
+            <input type="number" id="act-skill-${i}" value="1" step="0.5">
+            <select id="act-source-${i}">
+              <option value="">Manual</option>
+              <option value="fisico">Físico</option>
+              <option value="reflejos">Reflejos</option>
+              <option value="resistencia">Resistencia</option>
+            </select>
+          </div>
+        </label>
+        <label>Bono<input type="number" id="act-bono-${i}" value="0"></label>
+        <label>Escalón de arma<input type="number" id="act-step-${i}" value="0" min="0" max="5"></label>
+      </div>`;
+    }
+    $('#actions-container').innerHTML = html;
+    for(let i=1;i<=n;i++){
+      $(`#act-source-${i}`).addEventListener('change', (e)=>{
+        const src = e.target.value;
+        const skillInput = $(`#act-skill-${i}`);
+        if(src){
+          skillInput.value = numVal('f-'+src);
+          skillInput.setAttribute('readonly','readonly');
+        } else {
+          skillInput.removeAttribute('readonly');
+        }
+      });
+    }
+  }
+
+  $('#n-stepper').addEventListener('click', (e)=>{
+    const btn = e.target.closest('button');
+    if(!btn) return;
+    currentN = parseInt(btn.dataset.n);
+    $$('#n-stepper button').forEach(b=>b.classList.toggle('active', b===btn));
+    renderActions(currentN);
+    $('#results-attack').innerHTML='';
+  });
+
+  $('#btn-roll-attack').addEventListener('click', ()=>{
+    let total = 0;
+    let rows = '';
+    for(let i=1;i<=currentN;i++){
+      const type = $(`#act-type-${i}`).value;
+      const skill = parseFloat($(`#act-skill-${i}`).value) || 0;
+      const bono = parseFloat($(`#act-bono-${i}`).value) || 0;
+      const step = clamp(parseInt($(`#act-step-${i}`).value) || 0, 0, 5);
+      const die = dieForAction(currentN, step);
+      const roll = rollDie(die);
+      const mod = (skill*skill + bono) / currentN;
+      const subtotal = roll + mod;
+      total += subtotal;
+      rows += `<div class="result-row">
+        <span class="result-tag">${escapeHtml(type)}</span>
+        <span>1d${die} → ${roll}</span>
+        <span>+ ${mod.toFixed(1)}</span>
+        <span class="result-total">= ${subtotal.toFixed(1)}</span>
+      </div>`;
+    }
+    rows += `<div class="result-grand">Suma total de referencia: <strong>${total.toFixed(1)}</strong></div>`;
+    $('#results-attack').innerHTML = rows;
+  });
+
+  $('#btn-roll-ee').addEventListener('click', ()=>{
+    const enfoque = parseFloat($('#enfoque-ee').value) || 0;
+    const roll = rollDie(4);
+    const total = roll + enfoque;
+    $('#results-ee').innerHTML = `1d4 (${roll}) + Enfoque (${enfoque}) = <strong style="color:var(--amber)">${total}</strong> puntos de E.E. para repartir entre Cuenta y Potencia.`;
+  });
+
+  // ---------------- TAB C: RESISTENCIAS ----------------
+  function calcResist(){
+    const base = parseFloat($('#c-damage').value) || 0;
+    const mult = parseFloat($('#c-affinity').value) || 1;
+    const final = Math.round(base*mult);
+    setText('c-result', final);
+    setText('c-formula', `${base} × ${mult} = ${final}`);
+  }
+  $('#c-damage').addEventListener('input', calcResist);
+  $('#c-affinity').addEventListener('change', calcResist);
+
+  // ---------------- TAB D: CHEQUEO GENERAL ----------------
+  let currentDN = 1;
+  const dLadder = [20,12,8,6];
+
+  $('#d-stepper').addEventListener('click', (e)=>{
+    const btn = e.target.closest('button');
+    if(!btn) return;
+    currentDN = parseInt(btn.dataset.n);
+    $$('#d-stepper button').forEach(b=>b.classList.toggle('active', b===btn));
+  });
+
+  $('#btn-roll-check').addEventListener('click', ()=>{
+    const target = parseFloat($('#d-difficulty').value);
+    const die = dLadder[currentDN-1];
+    const mod = parseFloat($('#d-mod').value) || 0;
+    const roll = rollDie(die);
+    const total = roll + mod;
+    const success = total >= target;
+    const margin = total - target;
+    $('#results-check').innerHTML = `
+      <div class="result-row">
+        <span>1d${die} → ${roll}</span>
+        <span>+ ${mod}</span>
+        <span class="result-total">= ${total}</span>
+      </div>
+      <div class="result-grand ${success?'ok':'bad'}">${success?'ÉXITO':'FRACASO'} — objetivo ≥ ${target}, margen ${margin>=0?'+':''}${margin}</div>
+    `;
+  });
+
+  // ---------------- INIT ----------------
+  recalcFicha();
+  renderActions(1);
+  calcResist();
+  refreshFixerList();
+})();
+</script>
+</body>
+</html>
