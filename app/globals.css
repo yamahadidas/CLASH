@@ -397,6 +397,7 @@ figure.manual-figure figcaption{
   color:var(--text-dim);text-decoration:none;border:1px solid var(--line);
   padding:8px 13px;border-radius:3px;transition:color .15s, border-color .15s;
 }
+.terminal-header button.th-link{cursor:pointer;background:none;font-family:var(--font-mono);}
 .terminal-header .th-link:hover{color:var(--teal);border-color:var(--teal);}
 .terminal-header .th-link.primary{color:#fff;background:var(--red);border-color:var(--red);}
 .terminal-header .th-link.primary:hover{filter:brightness(1.15);}
