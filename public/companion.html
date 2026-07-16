@@ -136,9 +136,10 @@
   }
   .stat-pair-title{
     font-family:var(--font-display);font-size:13px;font-weight:600;
-    color:var(--text);margin-bottom:8px;display:flex;justify-content:space-between;
+    color:var(--text);margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;gap:8px;
   }
   .stat-pair-title span{font-family:var(--font-mono);color:var(--amber);font-size:13px;}
+  .stat-icon{height:32px;width:auto;image-rendering:crisp-edges;flex-shrink:0;}
   .stat-pair-inputs{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
   .stat-pair-inputs label{font-size:10.5px;}
 
@@ -187,6 +188,47 @@
   .status-msg{font-family:var(--font-mono);font-size:11.5px;margin-top:8px;min-height:14px;}
   .status-msg.ok{color:var(--good);}
   .status-msg.err{color:var(--bad);}
+
+  /* ---------- FIXER DOSSIER ---------- */
+  .dossier{
+    background:var(--panel);border:1px solid var(--line);
+    border-radius:3px;padding:20px;margin-top:18px;
+  }
+  .dossier-head{
+    display:flex;justify-content:space-between;align-items:flex-start;gap:12px;
+    margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--line-soft);
+  }
+  .dossier-title{
+    font-family:var(--font-display);font-size:17px;font-weight:600;color:var(--text);
+    letter-spacing:.02em;
+  }
+  .dossier-sub{
+    font-family:var(--font-mono);font-size:10.5px;color:var(--text-dim);
+    text-transform:uppercase;letter-spacing:.08em;
+  }
+  .dossier-stamp{
+    font-family:var(--font-mono);font-size:10px;letter-spacing:.06em;
+    color:var(--red);border:1px solid var(--red-soft);
+    padding:6px 10px;transform:rotate(-3deg);
+    text-transform:uppercase;text-align:center;line-height:1.4;
+    white-space:nowrap;opacity:.8;
+  }
+  .dossier-body{display:grid;grid-template-columns:1.2fr 1fr;gap:16px;}
+  .dossier-field{}
+  .dossier-field-label{
+    font-family:var(--font-mono);font-size:10.5px;color:var(--text-dim);
+    text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;
+  }
+  .dossier-input-row{display:flex;gap:8px;align-items:flex-end;}
+  .dossier-input-row input{flex:1;}
+  .dossier-input-row button{align-self:flex-end;}
+  .dossier-saved{}
+  .dossier-saved-label{
+    font-family:var(--font-mono);font-size:10.5px;color:var(--text-dim);
+    text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px;
+  }
+  .dossier-saved select{width:100%;margin-bottom:8px;}
+  .dossier-saved-actions{display:flex;gap:6px;}
 
   /* ---------- STEPPER ---------- */
   .stepper{display:flex;gap:6px;margin-bottom:16px;}
@@ -252,7 +294,7 @@
     .stat-grid{grid-template-columns:1fr 1fr;}
     .out-row{grid-template-columns:1fr;}
     .action-row{grid-template-columns:1fr 1fr;}
-    .save-row{grid-template-columns:1fr 1fr;}
+    .dossier-body{grid-template-columns:1fr;}
     .two-col{grid-template-columns:1fr;}
     .ee-block{grid-template-columns:1fr;}
     .header{flex-direction:column;}
@@ -285,28 +327,28 @@
 
     <div class="stat-grid">
       <div class="stat-pair">
-        <div class="stat-pair-title">Fortaleza <span id="out-fortaleza">1.0</span></div>
+        <div class="stat-pair-title"><img class="stat-icon" src="img/stat-fortitude.png" alt=""> Fortaleza <span id="out-fortaleza">1.0</span></div>
         <div class="stat-pair-inputs">
           <label>Físico<input type="number" id="f-fisico" value="1" min="1" max="9" step="1"></label>
           <label>Resistencia<input type="number" id="f-resistencia" value="1" min="1" max="9" step="1"></label>
         </div>
       </div>
       <div class="stat-pair">
-        <div class="stat-pair-title">Prudencia <span id="out-prudencia">1.0</span></div>
+        <div class="stat-pair-title"><img class="stat-icon" src="img/stat-prudence.png" alt=""> Prudencia <span id="out-prudencia">1.0</span></div>
         <div class="stat-pair-inputs">
           <label>Comprensión<input type="number" id="f-comprension" value="1" min="1" max="9" step="1"></label>
           <label>Calma<input type="number" id="f-calma" value="1" min="1" max="9" step="1"></label>
         </div>
       </div>
       <div class="stat-pair">
-        <div class="stat-pair-title">Templanza <span id="out-templanza">1.0</span></div>
+        <div class="stat-pair-title"><img class="stat-icon" src="img/stat-temperance.png" alt=""> Templanza <span id="out-templanza">1.0</span></div>
         <div class="stat-pair-inputs">
           <label>Intuición<input type="number" id="f-intuicion" value="1" min="1" max="9" step="1"></label>
           <label>Convicción<input type="number" id="f-conviccion" value="1" min="1" max="9" step="1"></label>
         </div>
       </div>
       <div class="stat-pair">
-        <div class="stat-pair-title">Justicia <span id="out-justicia">1.0</span></div>
+        <div class="stat-pair-title"><img class="stat-icon" src="img/stat-justice.png" alt=""> Justicia <span id="out-justicia">1.0</span></div>
         <div class="stat-pair-inputs">
           <label>Reflejos<input type="number" id="f-reflejos" value="1" min="1" max="9" step="1"></label>
           <label>Enfoque<input type="number" id="f-enfoque" value="1" min="1" max="9" step="1"></label>
@@ -342,18 +384,35 @@
       </tbody>
     </table>
 
-    <h3 class="section-label">Guardar / Cargar Fixer</h3>
-    <div class="save-row">
-      <div><label>Nombre del Fixer</label><input type="text" id="f-name" placeholder="ej. Roland"></div>
-      <div><label>Fixers guardados</label><select id="sel-load"><option value="">— sin fixers guardados —</option></select></div>
-      <button id="btn-save">Guardar</button>
-      <div style="display:flex;gap:6px;">
-        <button class="secondary" id="btn-load">Cargar</button>
-        <button class="ghost" id="btn-delete">Eliminar</button>
+    <!-- DOSSIER DEL FIXER -->
+    <div class="dossier">
+      <div class="dossier-head">
+        <div>
+          <div class="dossier-title">EXPEDIENTE DEL FIXER</div>
+          <div class="dossier-sub">Registro Oficial — Oficina de Fixers</div>
+        </div>
+        <div class="dossier-stamp">ARCHIVO<br>CONFIDENCIAL</div>
+      </div>
+      <div class="dossier-body">
+        <div class="dossier-field">
+          <div class="dossier-field-label">Nombre del Fixer</div>
+          <div class="dossier-input-row">
+            <input type="text" id="f-name" placeholder="ej. Roland">
+            <button id="btn-save">Registrar</button>
+          </div>
+          <div class="status-msg" id="save-status"></div>
+        </div>
+        <div class="dossier-saved">
+          <div class="dossier-saved-label">Archivos guardados</div>
+          <select id="sel-load"><option value="">— sin archivos —</option></select>
+          <div class="dossier-saved-actions">
+            <button class="secondary" id="btn-load">Cargar</button>
+            <button class="ghost" id="btn-delete">Eliminar</button>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="status-msg" id="save-status"></div>
-    <div class="footnote">Guardado localmente en tu cuenta, no es visible para otros jugadores. Cada uno guarda su propio Fixer desde su navegador.</div>
+
   </div>
 
   <!-- ================= TAB B ================= -->
@@ -451,6 +510,35 @@
 
 <script>
 (function(){
+  // ---- localStorage-based storage (works on Vercel static deploys) ----
+  const PREFIX = 'clash_';
+  window.storage = {
+    async set(key, value, _shared){
+      try{ localStorage.setItem(PREFIX + key, value); return true; }
+      catch(e){ return false; }
+    },
+    async get(key, _shared){
+      try{
+        const v = localStorage.getItem(PREFIX + key);
+        return v !== null ? { value: v } : null;
+      }catch(e){ return null; }
+    },
+    async delete(key, _shared){
+      try{ localStorage.removeItem(PREFIX + key); return true; }
+      catch(e){ return false; }
+    },
+    async list(prefix, _shared){
+      const keys = [];
+      try{
+        for(let i=0; i<localStorage.length; i++){
+          const k = localStorage.key(i);
+          if(k && k.startsWith(PREFIX + prefix)) keys.push(k.slice(PREFIX.length));
+        }
+      }catch(e){}
+      return { keys };
+    }
+  };
+
   const $ = (sel)=>document.querySelector(sel);
   const $$ = (sel)=>Array.from(document.querySelectorAll(sel));
   const clamp = (v,min,max)=>Math.max(min,Math.min(max,v));
