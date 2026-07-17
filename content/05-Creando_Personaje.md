@@ -1,8 +1,8 @@
 # Creando tu PJ
 
-"Oh callate conchetumare tanta wea que estatus y que fortaleza y puras tonteras culias. Te odio, odio tu sistema, odio el Limbus, odio El Pueblo o como se llame tu cagá de escenario y soy un pedófilo gigantesco y me encantan los niños chicos. Solo dime que dados tengo que tirar."
+"Oh callate conchetumare tanta wea que estatus y que fortaleza y puras tonteras culias. Te odio, odio tu sistema, odio el Limbus, odio El Pueblo o como se llame tu cagá de escenario y soy un mega pedófilo y me encantan los niños chicos. Solo dime que dados tengo que tirar."
 
-Maraco insoportable, la cagó. Ya, bueno.
+Que desagradable, la cagó. Ya, bueno.
 
 Pero para que estemos claros y en la misma página: **En CLASH, tu personaje puede morir. De forma repentina y horrible. La Ciudad es cruel, indiferente, y un Fixer muerto no merece un ápice de atención. Aunque existen métodos para esquivar muertes seguras y volver de hasta el más profundo abismo, estos son métodos reservados para aquellos que posean el dinero e influencia para costearlos, y no son baratos o accesibles. Ten ya en mente algún personaje de repuesto en caso de una horrible muerte sin aviso.** 
 
